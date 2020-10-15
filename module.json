@@ -8,9 +8,9 @@
   "compatibleCoreVersion":"0.6.6",
   "esmodules":["src/index.js"],
   "url":"https://gitlab.com/tiwato/quick_module_enable",
-  "manifest": "https://gitlab.com/tiwato/quick_module_enable/raw/v1.0.0/module.json",
   "download": "https://gitlab.com/tiwato/quick_module_enable/-/archive/v1.0.0/quick_module_enable.zip",  
 
+  "manifest": "https://gitlab.com/tiwato/quick_module_enable/raw/manifest/module.json",
   "readme": "https://gitlab.com/tiwato/quick_module_enable/-/blob/master/README.md",
   "bugs": "https://gitlab.com/tiwato/quick_module_enable/-/issues",
   "changelog": "https://gitlab.com/tiwato/quick_module_enable/-/blob/master/CHANGELOG.md",
