@@ -1,3 +1,6 @@
+# 1.0.3
+ * 0.7.6 compatible
+ 
 # 1.0.2
  * 0.7.5 compatible
 
