@@ -1,4 +1,6 @@
 {
-    "QUICKMODMANAGE.FilterRecent": "Recent"
+    "QUICKMODMANAGE.FilterRecent": "Recent Modules",
+    "QUICKMODMANAGE.FilterMajor": "Major Mismatch",
+    "QUICKMODMANAGE.FilterMinor": "Minor Mismatch"
     
 }
