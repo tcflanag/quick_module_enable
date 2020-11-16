@@ -71,7 +71,7 @@ function getQuickEnableData(options) {
         if (isUpdated || isNew) {
             counts_recent++;
         }
-        var isMinor = m.compatibleCoreVersion >= game.data.version
+        var isMinor = m.data.compatibleCoreVersion >= game.data.version
         var isMajor = m.data.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
         if (!isMajor) counts_major++
         if (!isMinor && isMajor) counts_minor++
