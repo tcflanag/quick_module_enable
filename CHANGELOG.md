@@ -1,3 +1,6 @@
+# 1.1.0
+* Add checking for manifest errors that could require a re-install
+
 # 1.0.3
  * 0.7.7 compatible
  * Add filters for Major/Minor rev compatability checking.
