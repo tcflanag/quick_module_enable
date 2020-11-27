@@ -41,7 +41,7 @@ async function quick_enable_init() {
         onChange: s => { }
     });
 
-    game.settings.set('quick-module-enable', 'manifestCheckerDate', 0)
+    //game.settings.set('quick-module-enable', 'manifestCheckerDate', 0)
 
     //Get current mod list
     var modVer = {}
