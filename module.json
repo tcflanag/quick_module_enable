@@ -26,6 +26,7 @@
     "path": "./lang/en.json"
   }],
   "media": [{
-    "cover":"https://gitlab.com/tiwato/quick_module_enable/-/raw/master/example.png"
+   "type":"cover",
+   "url":"https://gitlab.com/tiwato/quick_module_enable/-/raw/master/example.png"
   }]
 }
