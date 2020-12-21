@@ -12,7 +12,7 @@
   "compatibleCoreVersion":"0.7.9",
   "esmodules":["src/index.js"],
   "url":"https://gitlab.com/tiwato/quick_module_enable",
-  "download": "https://gitlab.com/tiwato/quick_module_enable/-/archive/v1.1.1/quick_module_enable.zip",  
+  "download": "https://gitlab.com/tiwato/quick_module_enable/-/archive/v1.1.2/quick_module_enable.zip",  
 
   "manifest": "https://gitlab.com/tiwato/quick_module_enable/-/raw/master/module.json",
   "readme": "https://gitlab.com/tiwato/quick_module_enable/-/blob/master/README.md",
