@@ -1,3 +1,6 @@
+# 1.1.2
+ * Update for 0.7.9
+ 
 # 1.1.1
  * Remove debug hook
   

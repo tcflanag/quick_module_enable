@@ -95,7 +95,7 @@ function getQuickEnableData(options) {
     const modVer = game.settings.get('quick-module-enable', 'previousModules')[0] // Element 0 is oldest, so check it for version
     const newMod = game.settings.get('quick-module-enable', 'previousModules').slice(-2)[0] // Second to last elemet is state at previous load
 
-    if (typeof ForgeVTT !== undefined) {
+    if (typeof ForgeVTT !== "undefined") {
         if (Date.now() - game.settings.get('quick-module-enable', 'manifestCheckerDate') > 1000 * 60 * 60 * 24) {  // 1 day
             manifest_mismatch_mods = {}
             // Only run this when if the module tool is opened.
@@ -215,7 +215,7 @@ function getQuickEnableData(options) {
             count: counts_minor
         },
     )
-    if (typeof ForgeVTT !== undefined) {
+    if (typeof ForgeVTT !== "undefined") {
         data.filters.push(
             {
                 id: "error",
