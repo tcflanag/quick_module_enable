@@ -11,3 +11,5 @@ In addition, it provides a adds several filters to the stock Module Manager:
 
 ![Example of module manager with new filters](example.png)
 
+# Questions
+Feel free to contact me on Discord @ChrisF#4895, by filing an issue on GitLab, or using the [Bug Reporter Module](https://foundryvtt.com/packages/bug-reporter/).

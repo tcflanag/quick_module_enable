@@ -1,3 +1,6 @@
+# 1.1.3
+ * Add support for Bug Reporter
+
 # 1.1.2
  * Update for 0.7.9
  
