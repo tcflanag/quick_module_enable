@@ -1,3 +1,9 @@
+# 1.1.5
+ * Updating flagging support for 0.8.3
+
+# 1.1.4
+ * Fix download link
+ 
 # 1.1.3
  * Add support for Bug Reporter
 
