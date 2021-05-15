@@ -152,7 +152,7 @@ function getQuickEnableData(options) {
             counts_recent++;
         }
         var isMinor = m.data.compatibleCoreVersion >= game.data.version
-        var isMajor = m.data.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
+        var isMajor = m.compatibleCoreVersion === undefined ||  m.data.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
         if (!isMajor) counts_major++
         if (!isMinor && isMajor) counts_minor++
     }
@@ -160,7 +160,7 @@ function getQuickEnableData(options) {
     if (this._filter === "minor") {
         data.modules = data.modules.reduce((arr, m) => {
             var isMinor = m.compatibleCoreVersion >= game.data.version
-            var isMajor = m.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
+            var isMajor = m.compatibleCoreVersion === undefined || m.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
             if (isMinor || !isMajor) return arr
             return arr.concat([m]);
         }, []);
@@ -168,7 +168,7 @@ function getQuickEnableData(options) {
 
     if (this._filter === "major") {
         data.modules = data.modules.reduce((arr, m) => {
-            var isMajor = m.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
+            var isMajor = m.compatibleCoreVersion === undefined || m.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
             if (isMajor) return arr
             return arr.concat([m]);
         }, []);

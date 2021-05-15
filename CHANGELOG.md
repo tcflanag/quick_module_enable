@@ -1,3 +1,6 @@
+# 1.1.6
+ * Fix crash when a module has an undefined compatibleCoreVersion
+
 # 1.1.5
  * Updating flagging support for 0.8.3
 
