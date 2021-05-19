@@ -25,7 +25,13 @@
     "lang": "en",
     "name": "English",
     "path": "./lang/en.json"
-  }],
+  },
+  {
+    "lang": "es",
+    "name": "Español",
+    "path": "./lang/es.json"
+  }
+  ],
   "media": [{
    "type":"cover",
    "url":"https://gitlab.com/tiwato/quick_module_enable/-/raw/master/example.png"
