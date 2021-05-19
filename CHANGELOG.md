@@ -1,3 +1,7 @@
+# 1.2.0
+ * Remove stale manifest checker, since it's now included in the core.
+ * Dropping 0.7.x support
+
 # 1.1.7
  * Add Spanish language support, thanks to @lozalojo
  * Fix error in counting modules

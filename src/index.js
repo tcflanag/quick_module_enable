@@ -1,19 +1,6 @@
 Hooks.once("ready", quick_enable_init)
 
-var manifest_mismatch_mods = {}
-
-
 //CONFIG.debug.quick_module_enable =true
-
-
-function ver_check(query, mod) {
-    query.json().then(modules => {
-        if (modules.manifest === null)
-            return
-        manifest_mismatch_mods[modules.manifest.name] = modules.manifest
-        game.settings.set('quick-module-enable', 'manifestChecker', manifest_mismatch_mods)
-    })
-}
 
 async function quick_enable_init() {
     if (!game.user.isGM) return
@@ -26,22 +13,6 @@ async function quick_enable_init() {
         config: false,
         onChange: s => { }
     });
-    game.settings.register('quick-module-enable', "manifestChecker", {
-        scope: "world",
-        type: Object,
-        default: [],
-        config: false,
-        onChange: s => { }
-    });
-    game.settings.register('quick-module-enable', "manifestCheckerDate", {
-        scope: "world",
-        type: Number,
-        default: 0,
-        config: false,
-        onChange: s => { }
-    });
-
-    //game.settings.set('quick-module-enable', 'manifestCheckerDate', 0)
 
     //Get current mod list
     var modVer = {}
@@ -94,52 +65,6 @@ function getQuickEnableData(options) {
     var counts_minor = 0
     const modVer = game.settings.get('quick-module-enable', 'previousModules')[0] // Element 0 is oldest, so check it for version
     const newMod = game.settings.get('quick-module-enable', 'previousModules').slice(-2)[0] // Second to last elemet is state at previous load
-
-    if (typeof ForgeVTT !== "undefined") {
-        if (Date.now() - game.settings.get('quick-module-enable', 'manifestCheckerDate') > 1000 * 60 * 60 * 24) {  // 1 day
-            manifest_mismatch_mods = {}
-            // Only run this when if the module tool is opened.
-            for (const mod of game.data.modules) {
-                fetch("https://forge-vtt.com/api/bazaar/manifest/" + mod.data.name + "?coreVersion=" + game.data.version).catch((e) => { console.error(e) }).then(query => ver_check(query, mod))
-            }
-            game.settings.set('quick-module-enable', 'manifestCheckerDate', Date.now())
-        }
-
-
-        var cached_data = game.settings.get('quick-module-enable', 'manifestChecker')
-        var error_list = []
-        var local_only = data.modules.reduce((arr, m) => {
-            if (cached_data[m.name] === undefined) {
-                console.log("QuickModuleEnable - Local only mod", m.name)
-                return arr.concat([m]);
-            }
-            return arr
-        }, []);
-
-        var reinstall = data.modules.reduce((arr, m) => {
-            if ((cached_data[m.name] !== undefined && m.manifest != cached_data[m.name].manifest)
-            && m.version > cached_data[m.name].version) {
-                console.group("QuickModuleEnable - Manifest Mismatch", m.title)
-                console.log("Local manifest :", m.manifest, m.version)
-                console.log("Latest manifest:", cached_data[m.name].manifest, cached_data[m.name].version )
-                console.groupEnd()
-                return arr.concat([m]);
-
-            }
-
-            return arr
-        }, []);
-
-
-        if (local_only){
-            error_list.push({ title: "----------------------- Non-Public Modules -----------------------" })
-            error_list = error_list.concat(local_only)
-        }
-        if (reinstall) {
-            error_list.push({ title: "---------- Manifest not matching latest public version ----------" })
-            error_list = error_list.concat(reinstall)
-        }
-    }
 
 
     // Count loop is seperate from filter loop so that count is always correct
@@ -215,16 +140,6 @@ function getQuickEnableData(options) {
             count: counts_minor
         },
     )
-    if (typeof ForgeVTT !== "undefined") {
-        data.filters.push(
-            {
-                id: "error",
-                label: game.i18n.localize('QUICKMODMANAGE.ManifestMismatch'),
-                css: this._filter === "error" ? " active" : "",
-                count: local_only.length + reinstall.length
-            },
-        )
-    }
 
     return data
 }
