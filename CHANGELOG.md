@@ -1,3 +1,7 @@
+# 1.1.7
+ * Add Spanish language support, thanks to @lozalojo
+ * Fix error in counting modules
+
 # 1.1.6
  * Fix crash when a module has an undefined compatibleCoreVersion
 

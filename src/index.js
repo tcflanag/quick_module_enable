@@ -152,7 +152,7 @@ function getQuickEnableData(options) {
             counts_recent++;
         }
         var isMinor = m.data.compatibleCoreVersion >= game.data.version
-        var isMajor = m.compatibleCoreVersion === undefined ||  m.data.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
+        var isMajor = m.data.compatibleCoreVersion === undefined ||  m.data.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
         if (!isMajor) counts_major++
         if (!isMinor && isMajor) counts_minor++
     }
