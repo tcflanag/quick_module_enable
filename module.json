@@ -7,17 +7,20 @@
     "email":"tiwato@gmail.com",
     "discord":"ChrisF#4895"
     }],
-  "version": "1.2.0",
+  "version": "1.2.1",
   "minimumCoreVersion": "0.8.0",
-  "compatibleCoreVersion":"0.8.4",
+  "compatibleCoreVersion":"0.8.9",
   "esmodules":["src/index.js"],
   "url":"https://gitlab.com/tiwato/quick_module_enable",
-  "download": "https://gitlab.com/tiwato/quick_module_enable/-/archive/v1.2.0/quick_module_enable.zip",  
+  "download": "https://gitlab.com/tiwato/quick_module_enable/-/archive/v1.2.1/quick_module_enable.zip",  
 
   "manifest": "https://gitlab.com/tiwato/quick_module_enable/-/raw/master/module.json",
   "readme": "https://gitlab.com/tiwato/quick_module_enable/-/blob/master/README.md",
   "bugs": "https://gitlab.com/tiwato/quick_module_enable/-/issues",
   "allowBugReporter": true,
+  "flags":{
+    "allowBugReporter": true
+  },
   "changelog": "https://gitlab.com/tiwato/quick_module_enable/-/blob/master/CHANGELOG.md",
   "license": "https://gitlab.com/tiwato/quick_module_enable/-/blob/master/LICENSE",
   "languages": [

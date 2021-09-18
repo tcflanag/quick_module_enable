@@ -1,3 +1,6 @@
+# 1.2.1
+ * Re-enable bug-reporter support
+ 
 # 1.2.0
  * Remove stale manifest checker, since it's now included in the core.
  * Dropping 0.7.x support
