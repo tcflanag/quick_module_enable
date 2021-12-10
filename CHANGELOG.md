@@ -1,3 +1,6 @@
+# 1.3.0
+ * Remove minor/major rev tabs, since data is more visible in foundry.
+ 
 # 1.2.1
  * Re-enable bug-reporter support
  

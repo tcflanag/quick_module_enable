@@ -61,14 +61,10 @@ async function quick_enable_init() {
 function getQuickEnableData(options) {
     var data = this.realGetData(options) // Don't want to copy the bulk of this function for compatability.
     var counts_recent = 0
-    var counts_major = 0
-    var counts_minor = 0
+
     const modVer = game.settings.get('quick-module-enable', 'previousModules')[0] // Element 0 is oldest, so check it for version
     const newMod = game.settings.get('quick-module-enable', 'previousModules').slice(-2)[0] // Second to last elemet is state at previous load
 
-
-    // Count loop is seperate from filter loop so that count is always correct
-    // Othewise, since I'm using the output of the real GetData function (above), the count would change depending on those filters too
     for (var m of game.data.modules) {
 
         var isNew = !(m.data.name in newMod)
@@ -76,33 +72,7 @@ function getQuickEnableData(options) {
         if (isUpdated || isNew) {
             counts_recent++;
         }
-        var isMinor = m.data.compatibleCoreVersion >= game.data.version
-        var isMajor = m.data.compatibleCoreVersion === undefined ||  m.data.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
-        if (!isMajor) counts_major++
-        if (!isMinor && isMajor) counts_minor++
     }
-
-    if (this._filter === "minor") {
-        data.modules = data.modules.reduce((arr, m) => {
-            var isMinor = m.compatibleCoreVersion >= game.data.version
-            var isMajor = m.compatibleCoreVersion === undefined || m.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
-            if (isMinor || !isMajor) return arr
-            return arr.concat([m]);
-        }, []);
-    }
-
-    if (this._filter === "major") {
-        data.modules = data.modules.reduce((arr, m) => {
-            var isMajor = m.compatibleCoreVersion === undefined || m.compatibleCoreVersion.slice(0, -1) >= game.data.version.slice(0, -1)
-            if (isMajor) return arr
-            return arr.concat([m]);
-        }, []);
-    }
-    if (this._filter === "error") {
-        data.modules = error_list
-        data.editable = false
-    }
-
     // Filter the list when "recent" is chosen to just have new or updated
     // Pre-check the new mods if this is the startup display
     if (this._filter === "recent") {
@@ -126,18 +96,6 @@ function getQuickEnableData(options) {
             label: game.i18n.localize('QUICKMODMANAGE.FilterRecent'),
             css: this._filter === "recent" ? " active" : "",
             count: counts_recent
-        },
-        {
-            id: "major",
-            label: game.i18n.localize('QUICKMODMANAGE.FilterMajor') + "(< " + game.data.version.slice(0, -1) + "x)",
-            css: this._filter === "major" ? " active" : "",
-            count: counts_major
-        },
-        {
-            id: "minor",
-            label: game.i18n.localize('QUICKMODMANAGE.FilterMinor') + " (< " + game.data.version + ")",
-            css: this._filter === "minor" ? " active" : "",
-            count: counts_minor
         },
     )
 
