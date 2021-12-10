@@ -1,3 +1,6 @@
+# 1.3.1 
+ * Re-add minor/major rev tabs at user request
+
 # 1.3.0
  * Remove minor/major rev tabs, since data is more visible in foundry.
  
