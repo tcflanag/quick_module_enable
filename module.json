@@ -9,7 +9,7 @@
     }],
   "version": "1.3.2",
   "minimumCoreVersion": "0.8.0",
-  "compatibleCoreVersion":"9.235",
+  "compatibleCoreVersion":"9.236",
   "esmodules":["src/index.js"],
   "url":"https://gitlab.com/tiwato/quick_module_enable",
   "download": "https://gitlab.com/tiwato/quick_module_enable/-/archive/v1.3.2/quick_module_enable.zip",  

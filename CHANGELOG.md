@@ -1,5 +1,6 @@
 # 1.3.2
  * Make major rev detection smarter to support new v9 style numbering
+ * Fix issue when other modules don't define compatibleCoreVersion. Closes #2
 
 # 1.3.1 
  * Re-add minor/major rev tabs at user request

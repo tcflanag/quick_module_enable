@@ -164,17 +164,19 @@ function getQuickEnableData(options) {
 }
 
 function verCompare(ver0,ver1) {
-    
     var major = isNewerVersion( majorVersion(ver0),majorVersion(ver1))
     var minor = isNewerVersion(ver0,ver1 ) && !major
     return {major, minor }
 }
 
 function majorVersion(version){
+    if(!version){
+        return 0
+    } 
     if (isNewerVersion('9',version)) {
         return version.split('.')[0] + "." + version.split('.')[1]
-    } else{
-        return version.split('.')[0]
-    }
+    } 
+    return version.split('.')[0]
+
 }
 
