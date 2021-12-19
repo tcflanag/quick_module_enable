@@ -1,7 +1,7 @@
 {
     "QUICKMODMANAGE.FilterRecent": "Recent Modules",
-    "QUICKMODMANAGE.FilterMajor": "Major Mismatch",
-    "QUICKMODMANAGE.FilterMinor": "Minor Mismatch",
+    "QUICKMODMANAGE.FilterMajor": "Major Ver. Mismatch",
+    "QUICKMODMANAGE.FilterMinor": "Minor Ver. Mismatch",
     "QUICKMODMANAGE.ManifestMismatch": "Manual Reinstall Needed"
     
     

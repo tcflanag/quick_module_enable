@@ -38,6 +38,8 @@ async function quick_enable_init() {
     // Monkeypatch to reuse the existing Modmanagment API
     ModuleManagement.prototype.realGetData = ModuleManagement.prototype.getData
     ModuleManagement.prototype.getData = getQuickEnableData
+    ModuleManagement.prototype._realOnSearchFilter = ModuleManagement.prototype._onSearchFilter
+    ModuleManagement.prototype._onSearchFilter = onSearchFilter
 
     // Check if there are any new mods, and display the manager if so
     var oldVer = modHistory.slice(-2)[0] // Second to last elemet is state at previous load
@@ -60,6 +62,22 @@ async function quick_enable_init() {
 }
 
 
+// New v9+ filters
+function onSearchFilter(event, query, rgx, html) {
+    this._realOnSearchFilter(event, query, rgx, html)
+    
+    const version_string = game.version??game.data.version
+    for ( let li of html.children ) {
+        const name = li.dataset.moduleName;
+        var vc = verCompare(version_string,game.modules.get(name).data.compatibleCoreVersion)
+        if(((this._filter === "minor") && !vc.minor) ||
+           ((this._filter === "major") && !vc.major )){
+            li.classList.toggle("hidden", true);
+           }
+    }
+  }
+
+
 function getQuickEnableData(options) {
     const version_string = game.version??game.data.version
     var data = this.realGetData(options) // Don't want to copy the bulk of this function for compatability.
@@ -79,25 +97,22 @@ function getQuickEnableData(options) {
         if (isUpdated || isNew) {
             counts_recent++;
         }
-        var isMinor = m.data.compatibleCoreVersion >= version_string
-        var isMajor = m.data.compatibleCoreVersion === undefined ||  m.data.compatibleCoreVersion.slice(0, -1) >= version_string.slice(0, -1)
-        if (!isMajor) counts_major++
-        if (!isMinor && isMajor) counts_minor++
+        var vc= verCompare(version_string,m.data.compatibleCoreVersion)
+        if (vc.major) counts_major++
+        if (vc.minor) counts_minor++
     }
 
+    // Legacy 0.8.x filters
     if (this._filter === "minor") {
         data.modules = data.modules.reduce((arr, m) => {
-            var isMinor = m.compatibleCoreVersion >= version_string
-            var isMajor = m.compatibleCoreVersion === undefined || m.compatibleCoreVersion.slice(0, -1) >= version_string.slice(0, -1)
-            if (isMinor || !isMajor) return arr
+            if (!verCompare(version_string,m.data.compatibleCoreVersion).minor) return arr
             return arr.concat([m]);
         }, []);
     }
 
     if (this._filter === "major") {
         data.modules = data.modules.reduce((arr, m) => {
-            var isMajor = m.compatibleCoreVersion === undefined || m.compatibleCoreVersion.slice(0, -1) >= version_string.slice(0, -1)
-            if (isMajor) return arr
+            if (!verCompare(version_string,m.data.compatibleCoreVersion).major) return arr
             return arr.concat([m]);
         }, []);
     }
@@ -122,6 +137,7 @@ function getQuickEnableData(options) {
     }
 
 
+    // Common to 0.8 and v9
     // Add a filter to the ModuleManagment page.
     data["filters"].push(
         {
@@ -132,7 +148,7 @@ function getQuickEnableData(options) {
         },
         {
             id: "major",
-            label: game.i18n.localize('QUICKMODMANAGE.FilterMajor') + "(< " + version_string.slice(0, -1) + "x)",
+            label: game.i18n.localize('QUICKMODMANAGE.FilterMajor') + "(< " + majorVersion(version_string) + ".x)",
             css: this._filter === "major" ? " active" : "",
             count: counts_major
         },
@@ -145,5 +161,20 @@ function getQuickEnableData(options) {
     )
 
     return data
+}
+
+function verCompare(ver0,ver1) {
+    
+    var major = isNewerVersion( majorVersion(ver0),majorVersion(ver1))
+    var minor = isNewerVersion(ver0,ver1 ) && !major
+    return {major, minor }
+}
+
+function majorVersion(version){
+    if (isNewerVersion('9',version)) {
+        return version.split('.')[0] + "." + version.split('.')[1]
+    } else{
+        return version.split('.')[0]
+    }
 }
 

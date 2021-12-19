@@ -1,3 +1,6 @@
+# 1.3.2
+ * Make major rev detection smarter to support new v9 style numbering
+
 # 1.3.1 
  * Re-add minor/major rev tabs at user request
 
