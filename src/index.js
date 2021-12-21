@@ -128,10 +128,6 @@ function getQuickEnableData(options) {
                 return arr.concat([m]);
             }, []);
         }
-        if (this._filter === "error") {
-            data.modules = error_list
-            data.editable = false
-        }
     
         // Filter the list when "recent" is chosen to just have new or updated
         // Pre-check the new mods if this is the startup display
