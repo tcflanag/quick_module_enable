@@ -69,11 +69,22 @@ function onSearchFilter(event, query, rgx, html) {
     const version_string = game.version??game.data.version
     for ( let li of html.children ) {
         const name = li.dataset.moduleName;
+        const modVer = game.settings.get('quick-module-enable', 'previousModules')[0] // Element 0 is oldest, so check it for version
+        const newMod = game.settings.get('quick-module-enable', 'previousModules').slice(-2)[0] // Second to last elemet is state at previous load
+
         var vc = verCompare(version_string,game.modules.get(name).data.compatibleCoreVersion)
+        var isNew = !(name in newMod)
+        var isUpdated = !(name in modVer && modVer[name]["version"] === game.modules.get(name).data.version)
+
         if(((this._filter === "minor") && !vc.minor) ||
-           ((this._filter === "major") && !vc.major )){
+           ((this._filter === "major") && !vc.major ) ||
+           ((this._filter === "recent") && !(isUpdated || isNew))){
             li.classList.toggle("hidden", true);
            }
+        
+            // Filter the list when "recent" is chosen to just have new or updated
+            // Pre-check the new mods if this is the startup display
+           if (isNew && this._quick_install_mode) m.active = true      
     }
   }
 
@@ -103,41 +114,42 @@ function getQuickEnableData(options) {
     }
 
     // Legacy 0.8.x filters
-    if (this._filter === "minor") {
-        data.modules = data.modules.reduce((arr, m) => {
-            if (!verCompare(version_string,m.data.compatibleCoreVersion).minor) return arr
-            return arr.concat([m]);
-        }, []);
+    if(!isNewerVersion(version_string,9)) {
+        if (this._filter === "minor") {
+            data.modules = data.modules.reduce((arr, m) => {
+                if (!verCompare(version_string,m.data.compatibleCoreVersion).minor) return arr
+                return arr.concat([m]);
+            }, []);
+        }
+    
+        if (this._filter === "major") {
+            data.modules = data.modules.reduce((arr, m) => {
+                if (!verCompare(version_string,m.data.compatibleCoreVersion).major) return arr
+                return arr.concat([m]);
+            }, []);
+        }
+        if (this._filter === "error") {
+            data.modules = error_list
+            data.editable = false
+        }
+    
+        // Filter the list when "recent" is chosen to just have new or updated
+        // Pre-check the new mods if this is the startup display
+        if (this._filter === "recent") {
+            data.modules = data.modules.reduce((arr, m) => {
+    
+                var isNew = !(m.name in newMod)
+                var isUpdated = !(m.name in modVer && modVer[m.name]["version"] === m.version)
+    
+                if (!(isUpdated || isNew)) return arr;
+                if (isNew && this._quick_install_mode) m.active = true
+    
+                return arr.concat([m]);
+            }, []);
+        }
     }
 
-    if (this._filter === "major") {
-        data.modules = data.modules.reduce((arr, m) => {
-            if (!verCompare(version_string,m.data.compatibleCoreVersion).major) return arr
-            return arr.concat([m]);
-        }, []);
-    }
-    if (this._filter === "error") {
-        data.modules = error_list
-        data.editable = false
-    }
 
-    // Filter the list when "recent" is chosen to just have new or updated
-    // Pre-check the new mods if this is the startup display
-    if (this._filter === "recent") {
-        data.modules = data.modules.reduce((arr, m) => {
-
-            var isNew = !(m.name in newMod)
-            var isUpdated = !(m.name in modVer && modVer[m.name]["version"] === m.version)
-
-            if (!(isUpdated || isNew)) return arr;
-            if (isNew && this._quick_install_mode) m.active = true
-
-            return arr.concat([m]);
-        }, []);
-    }
-
-
-    // Common to 0.8 and v9
     // Add a filter to the ModuleManagment page.
     data["filters"].push(
         {

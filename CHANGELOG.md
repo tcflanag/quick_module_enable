@@ -1,3 +1,6 @@
+# 1.3.3
+ * Fix issue with recent tab on v9
+ 
 # 1.3.2
  * Make major rev detection smarter to support new v9 style numbering
  * Fix issue when other modules don't define compatibleCoreVersion. Closes #2
