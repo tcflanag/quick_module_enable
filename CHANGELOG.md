@@ -1,3 +1,6 @@
+# 1.3.4
+ * Fix new modules now enabling properly on v9
+ 
 # 1.3.3
  * Fix issue with recent tab on v9
  

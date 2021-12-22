@@ -84,7 +84,7 @@ function onSearchFilter(event, query, rgx, html) {
         
             // Filter the list when "recent" is chosen to just have new or updated
             // Pre-check the new mods if this is the startup display
-           if (isNew && this._quick_install_mode) m.active = true      
+           if (isNew && this._quick_install_mode) li.querySelectorAll('input[type=checkbox]')[0].checked = true
     }
   }
 
