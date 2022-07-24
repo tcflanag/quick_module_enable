@@ -13,13 +13,13 @@ async function quick_enable_init() {
         type: Object,
         default: [],
         config: false,
-        onChange: s => { }
+        onChange: () => { }
     });
 
     //Get current mod list
     var modVer = {}
     for (const mod of game.data.modules) {
-        modVer[mod.id] = { version: mod.data.version }
+        modVer[mod.id] = { version: mod.version??mod.data.version }
     }
 
     //Get mod history
@@ -68,13 +68,14 @@ function onSearchFilter(event, query, rgx, html) {
     
     const version_string = game.version??game.data.version
     for ( let li of html.children ) {
-        const name = li.dataset.moduleName;
+        const name = li.dataset.moduleName??li.dataset.moduleId;
         const modVer = game.settings.get('quick-module-enable', 'previousModules')[0] // Element 0 is oldest, so check it for version
         const newMod = game.settings.get('quick-module-enable', 'previousModules').slice(-2)[0] // Second to last elemet is state at previous load
 
-        var vc = verCompare(version_string,game.modules.get(name).data.compatibleCoreVersion)
+        var m_data = v10Compat()?game.modules.get(name):game.modules.get(name).data
+        var vc = verCompare(version_string,m_data.compatibleCoreVersion??m_data.compatibility.verified)
         var isNew = !(name in newMod)
-        var isUpdated = !(name in modVer && modVer[name]["version"] === game.modules.get(name).data.version)
+        var isUpdated = !(name in modVer && modVer[name]["version"] === m_data.version)
 
         if(((this._filter === "minor") && !vc.minor) ||
            ((this._filter === "major") && !vc.major ) ||
@@ -102,13 +103,14 @@ function getQuickEnableData(options) {
     // Count loop is seperate from filter loop so that count is always correct
     // Othewise, since I'm using the output of the real GetData function (above), the count would change depending on those filters too
     for (var m of game.data.modules) {
-
-        var isNew = !(m.data.name in newMod)
-        var isUpdated = !(m.data.name in modVer && modVer[m.data.name]["version"] === m.data.version)
+        var m_data = v10Compat()?m:m.data
+        var name = m_data?.name ?? m_data.id
+        var isNew = !(name in newMod)
+        var isUpdated = !(name in modVer && modVer[name]["version"] === m_data.version)
         if (isUpdated || isNew) {
             counts_recent++;
         }
-        var vc= verCompare(version_string,m.data.compatibleCoreVersion)
+        var vc= verCompare(version_string,m_data.compatibleCoreVersion??m_data.compatibility.verified)
         if (vc.major) counts_major++
         if (vc.minor) counts_minor++
     }
@@ -117,14 +119,14 @@ function getQuickEnableData(options) {
     if(!isNewerVersion(version_string,9)) {
         if (this._filter === "minor") {
             data.modules = data.modules.reduce((arr, m) => {
-                if (!verCompare(version_string,m.data.compatibleCoreVersion).minor) return arr
+                if (!verCompare(version_string,m_data.compatibleCoreVersion??m_data.compatibility.verified).minor) return arr
                 return arr.concat([m]);
             }, []);
         }
     
         if (this._filter === "major") {
             data.modules = data.modules.reduce((arr, m) => {
-                if (!verCompare(version_string,m.data.compatibleCoreVersion).major) return arr
+                if (!verCompare(version_string,m_data.compatibleCoreVersion??m_data.compatibility.verified).major) return arr
                 return arr.concat([m]);
             }, []);
         }
@@ -133,9 +135,9 @@ function getQuickEnableData(options) {
         // Pre-check the new mods if this is the startup display
         if (this._filter === "recent") {
             data.modules = data.modules.reduce((arr, m) => {
-    
-                var isNew = !(m.name in newMod)
-                var isUpdated = !(m.name in modVer && modVer[m.name]["version"] === m.version)
+                name = m?.name ?? m.id
+                var isNew = !(name in newMod)
+                var isUpdated = !(name in modVer && modVer[name]["version"] === m.version)
     
                 if (!(isUpdated || isNew)) return arr;
                 if (isNew && this._quick_install_mode) m.active = true
@@ -169,6 +171,11 @@ function getQuickEnableData(options) {
     )
 
     return data
+}
+
+function v10Compat(){
+    const version_string = game.version??game.data.version
+    return (isNewerVersion(version_string,'10')) 
 }
 
 function verCompare(ver0,ver1) {
