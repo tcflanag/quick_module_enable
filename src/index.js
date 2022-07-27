@@ -62,6 +62,10 @@ async function quick_enable_init() {
 }
 
 
+function getCompatVer(m_data) {
+    return m_data?.compatibleCoreVersion ?? m_data?.compatibility?.verified ?? "X";
+}
+
 // New v9+ filters
 function onSearchFilter(event, query, rgx, html) {
     this._realOnSearchFilter(event, query, rgx, html)
@@ -73,7 +77,7 @@ function onSearchFilter(event, query, rgx, html) {
         const newMod = game.settings.get('quick-module-enable', 'previousModules').slice(-2)[0] // Second to last elemet is state at previous load
 
         var m_data = v10Compat()?game.modules.get(name):game.modules.get(name).data
-        var vc = verCompare(version_string,m_data.compatibleCoreVersion??m_data.compatibility.verified)
+        var vc = verCompare(version_string,getCompatVer(m_data))
         var isNew = !(name in newMod)
         var isUpdated = !(name in modVer && modVer[name]["version"] === m_data.version)
 
@@ -110,7 +114,7 @@ function getQuickEnableData(options) {
         if (isUpdated || isNew) {
             counts_recent++;
         }
-        var vc= verCompare(version_string,m_data.compatibleCoreVersion??m_data.compatibility.verified)
+        var vc= verCompare(version_string,getCompatVer(m_data))
         if (vc.major) counts_major++
         if (vc.minor) counts_minor++
     }
@@ -119,14 +123,14 @@ function getQuickEnableData(options) {
     if(!isNewerVersion(version_string,9)) {
         if (this._filter === "minor") {
             data.modules = data.modules.reduce((arr, m) => {
-                if (!verCompare(version_string,m_data.compatibleCoreVersion??m_data.compatibility.verified).minor) return arr
+                if (!verCompare(version_string,getCompatVer(m_data)).minor) return arr
                 return arr.concat([m]);
             }, []);
         }
     
         if (this._filter === "major") {
             data.modules = data.modules.reduce((arr, m) => {
-                if (!verCompare(version_string,m_data.compatibleCoreVersion??m_data.compatibility.verified).major) return arr
+                if (!verCompare(version_string,getCompatVer(m_data)).major) return arr
                 return arr.concat([m]);
             }, []);
         }

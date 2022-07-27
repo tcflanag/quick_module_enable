@@ -1,6 +1,9 @@
+# 1.3.6
+* Fix crash on v9 - Close #7
+
 # 1.3.5
  * Enabled v10 support
- * 
+
 # 1.3.4
  * Fix new modules now enabling properly on v9
  
