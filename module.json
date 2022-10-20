@@ -1,5 +1,6 @@
 {
   "name": "quick-module-enable",
+  "id": "quick-module-enable",
   "title": "Quick Module Enable",
   "description": "Povide a simple way to quickly enable new modules after installing them. The first login by a GM after installing modules will show a the Module Management dialog with the new modules pre-checked. Just click 'Save' to enable them all. <br> Also provides additional filters for other common module issues.",
   "author": "Chris Flanagan <tiwato@gmail.com>",
@@ -7,7 +8,7 @@
     "email":"tiwato@gmail.com",
     "discord":"ChrisF#4895"
     }],
-  "version": "1.3.6",
+  "version": "1.3.7",
   "minimumCoreVersion": "0.8.0",
   "compatibleCoreVersion":"10",
   "compatibility": {
@@ -17,7 +18,7 @@
   },
   "esmodules":["src/index.js"],
   "url":"https://gitlab.com/tiwato/quick_module_enable",
-  "download": "https://gitlab.com/tiwato/quick_module_enable/-/archive/v1.3.6/quick_module_enable.zip",
+  "download": "https://gitlab.com/tiwato/quick_module_enable/-/archive/v1.3.7/quick_module_enable.zip",
 
   "manifest": "https://gitlab.com/tiwato/quick_module_enable/-/raw/master/module.json",
   "readme": "https://gitlab.com/tiwato/quick_module_enable/-/blob/master/README.md",

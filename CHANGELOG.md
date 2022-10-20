@@ -1,3 +1,6 @@
+# 1.3.7
+* Fix compatibility warning
+
 # 1.3.6
 * Fix crash on v9 - Close #7
 
