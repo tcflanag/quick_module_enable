@@ -36,10 +36,15 @@ async function quick_enable_init() {
     await game.settings.set('quick-module-enable', 'previousModules', modHistory)
 
     // Monkeypatch to reuse the existing Modmanagment API
-    ModuleManagement.prototype.realGetData = ModuleManagement.prototype.getData
-    ModuleManagement.prototype.getData = getQuickEnableData
-    ModuleManagement.prototype._realOnSearchFilter = ModuleManagement.prototype._onSearchFilter
-    ModuleManagement.prototype._onSearchFilter = onSearchFilter
+    if(typeof libWrapper === 'function') {
+        libWrapper.register('quick-module-enable', 'ModuleManagement.prototype.getData',  function(wrapped, options) { return getQuickEnableData.call(this, wrapped(options))}, 'WRAPPER')
+    }
+    else {
+        ModuleManagement.prototype.realGetData = ModuleManagement.prototype.getData
+        ModuleManagement.prototype.getData = getQuickEnableData_so
+        ModuleManagement.prototype._realOnSearchFilter = ModuleManagement.prototype._onSearchFilter
+        ModuleManagement.prototype._onSearchFilter = onSearchFilter
+    }
 
     // Check if there are any new mods, and display the manager if so
     var oldVer = modHistory.slice(-2)[0] // Second to last elemet is state at previous load
@@ -94,9 +99,11 @@ function onSearchFilter(event, query, rgx, html) {
   }
 
 
-function getQuickEnableData(options) {
+function getQuickEnableData_so(options){
+    return getQuickEnableData.call(this, this.realGetData(options)) // Don't want to copy the bulk of this function for compatability.
+}
+function getQuickEnableData(data) {
     const version_string = game.version??game.data.version
-    var data = this.realGetData(options) // Don't want to copy the bulk of this function for compatability.
     var counts_recent = 0
     var counts_major = 0
     var counts_minor = 0

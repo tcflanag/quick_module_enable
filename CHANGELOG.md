@@ -1,3 +1,6 @@
+# 1.3.8
+* Added optional support for libWrapper
+
 # 1.3.7
 * Fix compatibility warning
 
