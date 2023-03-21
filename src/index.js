@@ -92,7 +92,9 @@ function onSearchFilter(html) {
 
         if(((this._filter === "minor") && !vc.minor) ||
            ((this._filter === "major") && !vc.major ) ||
-           ((this._filter === "recent") && !(isUpdated || isNew))){
+           ((this._filter === "recent") && !(isUpdated || isNew)) ||
+            (( this._filter === "match") && (vc.minor || vc.major))
+        ){
             li.classList.toggle("hidden", true);
            }
         
@@ -111,6 +113,7 @@ function getQuickEnableData(data) {
     var counts_recent = 0
     var counts_major = 0
     var counts_minor = 0
+    var counts_match = 0
     const modVer = game.settings.get('quick-module-enable', 'previousModules')[0] // Element 0 is oldest, so check it for version
     const newMod = game.settings.get('quick-module-enable', 'previousModules').slice(-2)[0] // Second to last elemet is state at previous load
 
@@ -128,6 +131,7 @@ function getQuickEnableData(data) {
         var vc= verCompare(version_string,getCompatVer(m_data))
         if (vc.major) counts_major++
         if (vc.minor) counts_minor++
+        if (!vc.minor && !vc.major) counts_match++
     }
 
 
@@ -151,6 +155,12 @@ function getQuickEnableData(data) {
             css: this._filter === "minor" ? " active" : "",
             count: counts_minor
         },
+        {
+            id: "match",
+            label: game.i18n.localize('QUICKMODMANAGE.FilterMatch') + " (>= " + version_string + ")",
+            css: this._filter === "match" ? " active" : "",
+            count: counts_match
+        },
     )
 
     return data
@@ -168,7 +178,7 @@ function verCompare(ver0,ver1) {
 }
 
 function majorVersion(version){
-    if(!version){
+    if(!version || version === 'X'){
         return 0
     } 
     if (isNewerVersion('9',version)) {
