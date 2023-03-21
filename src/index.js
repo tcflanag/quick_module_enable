@@ -38,12 +38,13 @@ async function quick_enable_init() {
     // Monkeypatch to reuse the existing Modmanagment API
     if(typeof libWrapper === 'function') {
         libWrapper.register('quick-module-enable', 'ModuleManagement.prototype.getData',  function(wrapped, options) { return getQuickEnableData.call(this, wrapped(options))}, 'WRAPPER')
+        libWrapper.register('quick-module-enable', 'ModuleManagement.prototype._onSearchFilter',  function(wrapped, event, query, rgx, html) { wrapped(event, query, rgx, html); return onSearchFilter.call(this, html )})
     }
     else {
         ModuleManagement.prototype.realGetData = ModuleManagement.prototype.getData
         ModuleManagement.prototype.getData = getQuickEnableData_so
         ModuleManagement.prototype._realOnSearchFilter = ModuleManagement.prototype._onSearchFilter
-        ModuleManagement.prototype._onSearchFilter = onSearchFilter
+        ModuleManagement.prototype._onSearchFilter = realOnSearchFilter_so
     }
 
     // Check if there are any new mods, and display the manager if so
@@ -72,8 +73,11 @@ function getCompatVer(m_data) {
 }
 
 // New v9+ filters
-function onSearchFilter(event, query, rgx, html) {
+function realOnSearchFilter_so(event, query, rgx, html) {
     this._realOnSearchFilter(event, query, rgx, html)
+    onSearchFilter.call(this, html)
+}
+function onSearchFilter(html) {
     
     const version_string = game.version??game.data.version
     for ( let li of html.children ) {
