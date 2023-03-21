@@ -9,10 +9,10 @@
     "discord":"ChrisF#4895"
     }],
   "version": "1.3.8",
-  "minimumCoreVersion": "0.8.0",
+  "minimumCoreVersion": "0.9.0",
   "compatibleCoreVersion":"10",
   "compatibility": {
-    "minimum": "0.8.0",
+    "minimum": "0.9.0",
     "verified": "11.292",
     "maximum": "11"
   },

@@ -130,38 +130,6 @@ function getQuickEnableData(data) {
         if (vc.minor) counts_minor++
     }
 
-    // Legacy 0.8.x filters
-    if(!isNewerVersion(version_string,9)) {
-        if (this._filter === "minor") {
-            data.modules = data.modules.reduce((arr, m) => {
-                if (!verCompare(version_string,getCompatVer(m_data)).minor) return arr
-                return arr.concat([m]);
-            }, []);
-        }
-    
-        if (this._filter === "major") {
-            data.modules = data.modules.reduce((arr, m) => {
-                if (!verCompare(version_string,getCompatVer(m_data)).major) return arr
-                return arr.concat([m]);
-            }, []);
-        }
-    
-        // Filter the list when "recent" is chosen to just have new or updated
-        // Pre-check the new mods if this is the startup display
-        if (this._filter === "recent") {
-            data.modules = data.modules.reduce((arr, m) => {
-                name = m?.name ?? m.id
-                var isNew = !(name in newMod)
-                var isUpdated = !(name in modVer && modVer[name]["version"] === m.version)
-    
-                if (!(isUpdated || isNew)) return arr;
-                if (isNew && this._quick_install_mode) m.active = true
-    
-                return arr.concat([m]);
-            }, []);
-        }
-    }
-
 
     // Add a filter to the ModuleManagment page.
     data["filters"].push(
