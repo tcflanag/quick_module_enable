@@ -1,5 +1,6 @@
-# 1.3.8
-* Added optional support for libWrapper
+# 1.3.9
+* Added optional support for libWrapper (#8)
+* Add filter to show fully compatible modules (#5)
 
 # 1.3.7
 * Fix compatibility warning
