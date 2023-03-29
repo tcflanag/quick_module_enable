@@ -1,3 +1,6 @@
+# 1.3.10
+* Fix bad download URL (#9)
+
 # 1.3.9
 * Added optional support for libWrapper (#8)
 * Add filter to show fully compatible modules (#5)
