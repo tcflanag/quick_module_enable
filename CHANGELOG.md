@@ -1,3 +1,6 @@
+# 1.3.11
+* Update compatibility for v12
+
 # 1.3.10
 * Fix bad download URL (#9)
 
