@@ -8,7 +8,7 @@
     "email":"tiwato@gmail.com",
     "discord":"ChrisF#4895"
     }],
-  "version": "1.3.11",
+  "version": "1.3.12",
   "minimumCoreVersion": "0.9.0",
   "compatibleCoreVersion":"10",
   "compatibility": {
@@ -17,17 +17,17 @@
   },
   "esmodules":["src/index.js"],
   "url":"https://gitlab.com/tiwato/quick_module_enable",
-  "download": "https://gitlab.com/tiwato/quick_module_enable/-/archive/v1.3.11/quick_module_enable.zip",
+  "download": "https://github.com/tcflanag/quick_module_enable/archive/refs/tags/v1.3.12.zip",
 
-  "manifest": "https://gitlab.com/tiwato/quick_module_enable/-/raw/master/module.json",
-  "readme": "https://gitlab.com/tiwato/quick_module_enable/-/blob/master/README.md",
+  "manifest": "https://raw.githubusercontent.com/tcflanag/quick_module_enable/master/module.json",
+  "readme": "https://raw.githubusercontent.com/tcflanag/quick_module_enable/master/README.md",
   "bugs": "https://gitlab.com/tiwato/quick_module_enable/-/issues",
   "allowBugReporter": true,
   "flags":{
     "allowBugReporter": true
   },
-  "changelog": "https://gitlab.com/tiwato/quick_module_enable/-/blob/master/CHANGELOG.md",
-  "license": "https://gitlab.com/tiwato/quick_module_enable/-/blob/master/LICENSE",
+  "changelog": "https://raw.githubusercontent.com/tcflanag/quick_module_enable/master/CHANGELOG.md",
+  "license": "https://raw.githubusercontent.com/tcflanag/quick_module_enable/master/LICENSE",
   "languages": [
   {
     "lang": "en",
@@ -42,6 +42,6 @@
   ],
   "media": [{
    "type":"cover",
-   "url":"https://gitlab.com/tiwato/quick_module_enable/-/raw/master/example.png"
+   "url":"https://raw.githubusercontent.com/tcflanag/quick_module_enable/master/example.png"
   }]
 }
