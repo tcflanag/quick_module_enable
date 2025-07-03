@@ -24,7 +24,7 @@ async function quick_enable_init() {
 
     //Get mod history
     var modHistory = game.settings.get('quick-module-enable', 'previousModules')
-
+    //modHistory =  [{"quick-module-enable":{"version":"1.4.0"}}]
     // Initialize history if empty
     if (modHistory.length === 0) modHistory.push(modVer)
     while (modHistory.length <= history_size) modHistory.unshift(modHistory[0])
@@ -36,16 +36,32 @@ async function quick_enable_init() {
     await game.settings.set('quick-module-enable', 'previousModules', modHistory)
 
     // Monkeypatch to reuse the existing Modmanagment API
-    if(typeof libWrapper === 'function') {
-        libWrapper.register('quick-module-enable', 'ModuleManagement.prototype.getData',  function(wrapped, options) { return getQuickEnableData.call(this, wrapped(options))}, 'WRAPPER')
-        libWrapper.register('quick-module-enable', 'ModuleManagement.prototype._onSearchFilter',  function(wrapped, event, query, rgx, html) { wrapped(event, query, rgx, html); return onSearchFilter.call(this, html )})
+    if (typeof libWrapper === 'function') {
+        libWrapper.register('quick-module-enable', 'ModuleManagement.prototype.getData', function (wrapped, options) {
+            return getQuickEnableData.call(this, wrapped(options))
+        }, 'WRAPPER')
+        libWrapper.register('quick-module-enable', 'ModuleManagement.prototype._onSearchFilter', function (wrapped, event, query, rgx, html) {
+            wrapped(event, query, rgx, html);
+            return onSearchFilter.call(this, html)
+        })
     }
-    else {
+    else if (!v13Compat()) {
         ModuleManagement.prototype.realGetData = ModuleManagement.prototype.getData
         ModuleManagement.prototype.getData = getQuickEnableData_so
         ModuleManagement.prototype._realOnSearchFilter = ModuleManagement.prototype._onSearchFilter
         ModuleManagement.prototype._onSearchFilter = realOnSearchFilter_so
     }
+    else {
+        //ModuleManagement.prototype.realGetData = ModuleManagement.prototype.getData
+        //ModuleManagement.prototype.getData = getQuickEnableData_so
+        foundry.applications.sidebar.apps.ModuleManagement.prototype._realPrepareContext = foundry.applications.sidebar.apps.ModuleManagement.prototype._prepareContext
+        foundry.applications.sidebar.apps.ModuleManagement.prototype._prepareContext = getQuickEnableData
+
+
+        foundry.applications.sidebar.apps.ModuleManagement.prototype._realOnSearchFilter =  foundry.applications.sidebar.apps.ModuleManagement.DEFAULT_OPTIONS["actions"]["changeFilter"]
+        foundry.applications.sidebar.apps.ModuleManagement.DEFAULT_OPTIONS["actions"]["changeFilter"]=onChangeFilter
+    }
+
 
     // Check if there are any new mods, and display the manager if so
     var oldVer = modHistory.slice(-2)[0] // Second to last elemet is state at previous load
@@ -60,10 +76,13 @@ async function quick_enable_init() {
         }
     }
     if (changes) {
-        var b = new ModuleManagement();
+        var b = new foundry.applications.sidebar.apps.ModuleManagement();
         b._filter = "recent"  // Default the dissplay to the "Recent" tb
         b._quick_install_mode = true // Auto enable new mods
-        b.render(true);
+        var temp = foundry.applications.sidebar.apps.ModuleManagement.prototype._onRender
+        foundry.applications.sidebar.apps.ModuleManagement.prototype._onRender = function (){console.log("AAAAA")}
+        await b.render(true);
+        foundry.applications.sidebar.apps.ModuleManagement.prototype._onRender = temp
     }
 }
 
@@ -73,14 +92,18 @@ function getCompatVer(m_data) {
 }
 
 // New v9+ filters
-function realOnSearchFilter_so(event, query, rgx, html) {
-    this._realOnSearchFilter(event, query, rgx, html)
-    onSearchFilter.call(this, html)
-}
-function onSearchFilter(html) {
-    
+// function realOnSearchFilter_so(event, query, rgx, html) {
+//
+//     onSearchFilter.call(this, html)
+// }
+function onChangeFilter(_event, target) {
+
+
+    this._filter = target.dataset.filter;
+
+
     const version_string = game.version??game.data.version
-    for ( let li of html.children ) {
+    for ( let li of this.element.querySelectorAll(".package" )) {
         const name = li.dataset.moduleName??li.dataset.moduleId;
         const modVer = game.settings.get('quick-module-enable', 'previousModules')[0] // Element 0 is oldest, so check it for version
         const newMod = game.settings.get('quick-module-enable', 'previousModules').slice(-2)[0] // Second to last elemet is state at previous load
@@ -97,18 +120,35 @@ function onSearchFilter(html) {
         ){
             li.classList.toggle("hidden", true);
            }
+        else{
+            li.classList.toggle("hidden", false);
+        }
         
             // Filter the list when "recent" is chosen to just have new or updated
             // Pre-check the new mods if this is the startup display
            if (isNew && this._quick_install_mode) li.querySelectorAll('input[type=checkbox]')[0].checked = true
     }
+
+    this._realOnSearchFilter(_event, target)
+
   }
 
+async function _onRender_so(context, options) {
+    if (!this._quick_install_mode) {
+        this._realOnRender(context, options)
+    }
 
-function getQuickEnableData_so(options){
-    return getQuickEnableData.call(this, this.realGetData(options)) // Don't want to copy the bulk of this function for compatability.
 }
-function getQuickEnableData(data) {
+
+function test() {
+    // foundry.applications.sidebar.apps.ModuleManagement.prototype._realOnRender = foundry.applications.sidebar.apps.ModuleManagement.prototype._onRender
+    // foundry.applications.sidebar.apps.ModuleManagement.prototype._onRender = _onRender_so
+
+}
+
+async function getQuickEnableData(options) {
+
+    context = await this._realPrepareContext(options)
     const version_string = game.version??game.data.version
     var counts_recent = 0
     var counts_major = 0
@@ -120,7 +160,7 @@ function getQuickEnableData(data) {
 
     // Count loop is seperate from filter loop so that count is always correct
     // Othewise, since I'm using the output of the real GetData function (above), the count would change depending on those filters too
-    for (var m of game.data.modules) {
+    for (var m of context.modules) {
         var m_data = v10Compat()?m:m.data
         var name = m_data?.name ?? m_data.id
         var isNew = !(name in newMod)
@@ -132,48 +172,65 @@ function getQuickEnableData(data) {
         if (vc.major) counts_major++
         if (vc.minor) counts_minor++
         if (!vc.minor && !vc.major) counts_match++
+
+        if (this._quick_install_mode) {
+            if (isNew ){
+                m_data.active = true
+                m_data.hidden = false
+            }
+            else {
+                m_data.hidden = true
+            }
+        }
+
+
     }
 
 
     // Add a filter to the ModuleManagment page.
-    data["filters"].push(
+    context["filters"].push(
         {
             id: "recent",
             label: game.i18n.localize('QUICKMODMANAGE.FilterRecent'),
-            css: this._filter === "recent" ? " active" : "",
+            active: this._quick_install_mode,
             count: counts_recent
         },
         {
             id: "major",
             label: game.i18n.localize('QUICKMODMANAGE.FilterMajor') + "(< " + majorVersion(version_string) + ".x)",
-            css: this._filter === "major" ? " active" : "",
             count: counts_major
         },
         {
             id: "minor",
             label: game.i18n.localize('QUICKMODMANAGE.FilterMinor') + " (< " + version_string + ")",
-            css: this._filter === "minor" ? " active" : "",
             count: counts_minor
         },
         {
             id: "match",
             label: game.i18n.localize('QUICKMODMANAGE.FilterMatch') + " (>= " + version_string + ")",
-            css: this._filter === "match" ? " active" : "",
             count: counts_match
         },
     )
+    if (this._quick_install_mode) {
+        context["filters"][0].active = false
+    }
 
-    return data
+    return context
 }
 
 function v10Compat(){
     const version_string = game.version??game.data.version
-    return (isNewerVersion(version_string,'10')) 
+    return (foundry.utils.isNewerVersion(version_string,'10'))
+}
+
+function v13Compat(){
+    const version_string = game.version??game.data.version
+    return (foundry.utils.isNewerVersion(version_string,'13'))
 }
 
 function verCompare(ver0,ver1) {
-    var major = isNewerVersion( majorVersion(ver0),majorVersion(ver1))
-    var minor = isNewerVersion(ver0,ver1 ) && !major
+    var major = foundry.utils.isNewerVersion( majorVersion(ver0),majorVersion(ver1))
+    var minor = foundry.utils.isNewerVersion(ver0,ver1 ) && !major
     return {major, minor }
 }
 
@@ -181,7 +238,7 @@ function majorVersion(version){
     if(!version || version === 'X'){
         return 0
     } 
-    if (isNewerVersion('9',version)) {
+    if (foundry.utils.isNewerVersion('9',version)) {
         return version.split('.')[0] + "." + version.split('.')[1]
     } 
     return version.split('.')[0]
