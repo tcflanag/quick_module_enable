@@ -1,3 +1,8 @@
+# 1.4.1
+* Fix libManager compatibility issue
+* Fix Chrome compatibility issue (#1)
+
+
 # 1.4.0
 * Add v13 compatibility
 * Drop pre-v13 support

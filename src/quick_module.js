@@ -36,31 +36,31 @@ async function quick_enable_init() {
     await game.settings.set('quick-module-enable', 'previousModules', modHistory)
 
     // Monkeypatch to reuse the existing Modmanagment API
-    if (typeof libWrapper === 'function') {
-        libWrapper.register('quick-module-enable', 'ModuleManagement.prototype.getData', function (wrapped, options) {
-            return getQuickEnableData.call(this, wrapped(options))
-        }, 'WRAPPER')
-        libWrapper.register('quick-module-enable', 'ModuleManagement.prototype._onSearchFilter', function (wrapped, event, query, rgx, html) {
-            wrapped(event, query, rgx, html);
-            return onSearchFilter.call(this, html)
-        })
-    }
-    else if (!v13Compat()) {
-        ModuleManagement.prototype.realGetData = ModuleManagement.prototype.getData
-        ModuleManagement.prototype.getData = getQuickEnableData_so
-        ModuleManagement.prototype._realOnSearchFilter = ModuleManagement.prototype._onSearchFilter
-        ModuleManagement.prototype._onSearchFilter = realOnSearchFilter_so
-    }
-    else {
+    // if (typeof libWrapper === 'function') {
+    //     libWrapper.register('quick-module-enable', 'ModuleManagement.prototype.getData', function (wrapped, options) {
+    //         return getQuickEnableData.call(this, wrapped(options))
+    //     }, 'WRAPPER')
+    //     libWrapper.register('quick-module-enable', 'ModuleManagement.prototype._onSearchFilter', function (wrapped, event, query, rgx, html) {
+    //         wrapped(event, query, rgx, html);
+    //         return onSearchFilter.call(this, html)
+    //     })
+    // }
+    // else if (!v13Compat()) {
+    //     ModuleManagement.prototype.realGetData = ModuleManagement.prototype.getData
+    //     ModuleManagement.prototype.getData = getQuickEnableData_so
+    //     ModuleManagement.prototype._realOnSearchFilter = ModuleManagement.prototype._onSearchFilter
+    //     ModuleManagement.prototype._onSearchFilter = realOnSearchFilter_so
+    // }
+    // else {
         //ModuleManagement.prototype.realGetData = ModuleManagement.prototype.getData
         //ModuleManagement.prototype.getData = getQuickEnableData_so
-        foundry.applications.sidebar.apps.ModuleManagement.prototype._realPrepareContext = foundry.applications.sidebar.apps.ModuleManagement.prototype._prepareContext
-        foundry.applications.sidebar.apps.ModuleManagement.prototype._prepareContext = getQuickEnableData
+    foundry.applications.sidebar.apps.ModuleManagement.prototype._realPrepareContext = foundry.applications.sidebar.apps.ModuleManagement.prototype._prepareContext
+    foundry.applications.sidebar.apps.ModuleManagement.prototype._prepareContext = getQuickEnableData
 
 
-        foundry.applications.sidebar.apps.ModuleManagement.prototype._realOnSearchFilter =  foundry.applications.sidebar.apps.ModuleManagement.DEFAULT_OPTIONS["actions"]["changeFilter"]
-        foundry.applications.sidebar.apps.ModuleManagement.DEFAULT_OPTIONS["actions"]["changeFilter"]=onChangeFilter
-    }
+    foundry.applications.sidebar.apps.ModuleManagement.prototype._realOnSearchFilter =  foundry.applications.sidebar.apps.ModuleManagement.DEFAULT_OPTIONS["actions"]["changeFilter"]
+    foundry.applications.sidebar.apps.ModuleManagement.DEFAULT_OPTIONS["actions"]["changeFilter"]=onChangeFilter
+    //}
 
 
     // Check if there are any new mods, and display the manager if so
@@ -148,7 +148,7 @@ function test() {
 
 async function getQuickEnableData(options) {
 
-    context = await this._realPrepareContext(options)
+    var context = await this._realPrepareContext(options)
     const version_string = game.version??game.data.version
     var counts_recent = 0
     var counts_major = 0
