@@ -1,3 +1,7 @@
+# 1.4.0
+* Add v13 compatibility
+* Drop pre-v13 support
+
 # 1.3.11
 * Update compatibility for v12
 
