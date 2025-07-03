@@ -16,12 +16,12 @@
     "verified": "13.346"
   },
   "esmodules":["src/index.js"],
-  "url":"https://gitlab.com/tiwato/quick_module_enable",
+  "url":"https://github.com/tcflanag/quick_module_enable",
   "download": "https://github.com/tcflanag/quick_module_enable/archive/refs/tags/v1.4.0.zip",
 
   "manifest": "https://raw.githubusercontent.com/tcflanag/quick_module_enable/master/module.json",
   "readme": "https://raw.githubusercontent.com/tcflanag/quick_module_enable/master/README.md",
-  "bugs": "https://gitlab.com/tiwato/quick_module_enable/-/issues",
+  "bugs": "https://github.com/tcflanag/quick_module_enable/issues",
   "allowBugReporter": true,
   "flags":{
     "allowBugReporter": true
