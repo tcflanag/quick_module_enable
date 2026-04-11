@@ -8,21 +8,20 @@
     "email":"tiwato@gmail.com",
     "discord":"ChrisF#4895"
     }],
-  "version": "1.4.1",
+  "version": "1.4.2",
   "minimumCoreVersion": "13",
   "compatibleCoreVersion":"13",
   "compatibility": {
     "minimum": "13",
-    "verified": "13.346"
+    "verified": "14.359"
   },
   "esmodules":["src/quick_module.js"],
   "url":"https://github.com/tcflanag/quick_module_enable",
-  "download": "https://github.com/tcflanag/quick_module_enable/archive/refs/tags/v1.4.1.zip",
+  "download": "https://github.com/tcflanag/quick_module_enable/archive/refs/tags/v1.4.2.zip",
 
   "manifest": "https://raw.githubusercontent.com/tcflanag/quick_module_enable/master/module.json",
   "readme": "https://raw.githubusercontent.com/tcflanag/quick_module_enable/master/README.md",
   "bugs": "https://github.com/tcflanag/quick_module_enable/issues",
-  "allowBugReporter": true,
   "flags":{
     "allowBugReporter": true
   },
